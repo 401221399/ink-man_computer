@@ -1,0 +1,18 @@
+2019-10-16 10:11:39.350 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'userController' method 
+public com.qfmy.inkman_computer.common.R com.qfmy.inkman_computer.controller.UserController.login(java.lang.String,java.lang.String)
+to {POST /user/login}: There is already 'userController' bean method
+public com.qfmy.inkman_computer.common.R com.qfmy.inkman_computer.controller.UserController.save(com.qfmy.inkman_computer.entity.User) mapped.
+2019-10-16 10:12:27.094 [restartedMain] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2019-10-16 10:21:02.617 [restartedMain] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2019-10-16 10:22:43.278 [restartedMain] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2019-10-16 10:23:15.372 [http-nio-8080-exec-4] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'salt' in 'field list'
+### The error may exist in com/qfmy/inkman_computer/dao/UserDao.java (best guess)
+### The error may involve com.qfmy.inkman_computer.dao.UserDao.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO user  ( id, password, salt, username )  VALUES  ( ?, ?, ?, ? )
+### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'salt' in 'field list'
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'salt' in 'field list']
+2019-10-16 10:40:43.689 [restartedMain] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2019-10-16 11:11:01.679 [http-nio-8080-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content type 'application/x-www-form-urlencoded;charset=UTF-8' not supported]
+2019-10-16 11:11:10.529 [http-nio-8080-exec-9] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content type 'application/x-www-form-urlencoded;charset=UTF-8' not supported]
