@@ -144,6 +144,37 @@
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
         </dependency>
+        <!--模拟页面点击-->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <!--python的requests移植-->
+        <dependency>
+            <groupId>net.dongliu</groupId>
+            <artifactId>requests</artifactId>
+            <version>5.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+
+
+
         <!--import org.mozilla.universalchardet.UniversalDetector;-->
         <dependency>
             <groupId>com.github.albfernandez</groupId>
