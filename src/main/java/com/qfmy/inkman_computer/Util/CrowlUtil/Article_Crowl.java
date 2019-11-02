@@ -3,17 +3,24 @@ package com.qfmy.inkman_computer.Util.CrowlUtil;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qfmy.inkman_computer.dao.ArticleDao;
+import com.qfmy.inkman_computer.entity.Article;
 import net.dongliu.requests.RawResponse;
 import net.dongliu.requests.Requests;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Article_Crowl {
@@ -24,6 +31,12 @@ public class Article_Crowl {
     String token;
     Map<String,String> cookiesMap;//cookies
     Map<String, Object> headers;//报头
+
+    ArticleDao ArticleDao;
+
+    public void setArticleDao(ArticleDao ArticleDao) {
+        this.ArticleDao = ArticleDao;
+    }
 
     public Article_Crowl() throws InterruptedException {
         this.search_url="https://mp.weixin.qq.com/cgi-bin/searchbiz?";
@@ -143,19 +156,26 @@ public class Article_Crowl {
             objectMapper = new ObjectMapper();
             BodyNode = objectMapper.readTree(ArticleBody);
             BodyNode=BodyNode.get("app_msg_list");
+
             for (int j=0;j<BodyNode.size();j++)
             {
-                System.out.println(BodyNode.get(j).get("title").asText());
-                System.out.println(BodyNode.get(j).get("link").asText());
-                System.out.println(stampToDate(BodyNode.get(j).get("update_time").asText()));
-                System.out.println(BodyNode.get(j).get("cover").asText());
-                System.out.println(BodyNode.get(j).get("itemidx").asText());
-                System.out.println("--------------------------------------------");
+                if(BodyNode.get(j).get("itemidx").asText()=="1" && (BodyNode.get(j).get("title").asText().indexOf("【小白必看")<0))//只取封面评测
+                {
+                    Article a=new Article();
+                    a.setTitle(BodyNode.get(j).get("title").asText());
+                    a.setImgurl(BodyNode.get(j).get("cover").asText());
+                    a.setUrl(BodyNode.get(j).get("link").asText());
+                    a.setData(stampToDate(BodyNode.get(j).get("update_time").asText()));
+                    a.setHtml(DownHtml.DownHtml(a.getUrl()));
+                    a.setForm("WeChat");
+                    //ArticleDao.insert(a);
+                }
             }
             Thread.sleep(2000);
         }
-        //driver.close();
-        //driver.quit();
+        driver.close();
+        driver.quit();
+        return ;
     }
 }
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+命名空间：dao路径
+ -->
+<mapper namespace="com.qfmy.inkman_computer.dao.itemDao">
+    <insert id="add" parameterType="com.qfmy.inkman_computer.entity.item" useGeneratedKeys="true" keyProperty="id" >
+       INSERT INTO item (classname, price, parameter, profile, name, divbox, imglist )
+       VALUES ( #{classname},#{price}, #{parameter},#{profile}, #{name}, #{divbox}, #{imglist} )
+    </insert>
+</mapper>

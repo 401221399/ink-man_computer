@@ -9,7 +9,7 @@ import java.io.IOException;
 public class DownHtml {
 
     //获取页面
-    public Document getDocument(String url)
+    public static Document getDocument(String url)
     {
         Document page=null;
         if(url.equals("") || url==null)
@@ -31,7 +31,7 @@ public class DownHtml {
         return page;
     }
 
-    public void DownHtml(String URL)
+    public static String DownHtml(String URL)
     {
         Document page=getDocument(URL);
 
@@ -45,15 +45,16 @@ public class DownHtml {
         //微信的图片链接都是在data-src属性中,src属性的链接则是无效的链接，所以要把data-src的链接赋值给src
         html = html.replace("data-src", "src");
 
-        FileWriter writer;
-        try {
-            writer = new FileWriter("D:\\工作站\\SpringBoot\\ink-man_computer\\this.html");
-            writer.write(html);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return html;
+//        FileWriter writer;
+//        try {
+//            writer = new FileWriter("D:\\工作站\\SpringBoot\\ink-man_computer\\this.html");
+//            writer.write(html);
+//            writer.flush();
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

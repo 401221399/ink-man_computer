@@ -2,20 +2,24 @@ package com.qfmy.inkman_computer.Util.CrowlUtil;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.qfmy.inkman_computer.entity.Article;
 import com.qfmy.inkman_computer.entity.item;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.ParameterList;
+import com.qfmy.inkman_computer.service.itemService;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import sun.security.krb5.internal.crypto.Aes128;
-
+import com.qfmy.inkman_computer.dao.*;
 import java.io.IOException;
-import java.time.Period;
 import java.util.*;
 
 public class Computer_Crowl {
+    itemService itemService;
+    ArticleDao ArticleDao;
+
+    public void setArticleDao(ArticleDao articleDao) {
+        ArticleDao = articleDao;
+    }
+
     private String domain="";//爬取的网站域名
     private String[] CrowlList; //爬取类型集合
     private Map<String,String> CrowlMap;//类型和关键字索引字典
@@ -36,6 +40,10 @@ public class Computer_Crowl {
         this. CrowlMap.put("机箱","case");
 
         this.CrowlList=new String[]{"notebook","cpu","vga","memory","mb","harddisk","dianziyingpan","power","sanre","case"};
+    }
+
+    public void setItemService(itemService itemService) {
+        this.itemService = itemService;
     }
 
     //获取页面
@@ -66,28 +74,48 @@ public class Computer_Crowl {
     //爬虫入口，遍历需要爬取的设备类型、页号，分别爬取
     public void crowl()
     {
-        String visiturl=domain+CrowlList[0]+"/s10.shtml";
-        Main_Page_Crowl(visiturl);
+        try
+        {
+            for (String s:CrowlList)
+            {
+                String visiturl=domain+s+"/s5.shtml";
+                String pagecount=getDocument(visiturl).select("div[id=Jpager] em i").text();
+                for (int i=0;i<Integer.parseInt(pagecount);i++)
+                {
+                    if (i==0) Main_Page_Crowl(visiturl,s);
+                    else {
+                        visiturl=domain+s+"/"+(i-1)*25+"s5.shtml";
+                        Main_Page_Crowl(visiturl,s);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
     }
 
 
 
     //爬取页面信息，爬起当前页面的每个商品
-    public void Main_Page_Crowl(String url)
+    public void Main_Page_Crowl(String url,String classname)
     {
         Document ComputerPage=getDocument(url);
 
         Elements itemList = ComputerPage.select("ul[id=JlistItems] li[class=item]");//获取页面下商品的集合
         for(int i=0;i<itemList.size();i++)
         {
-            item item=getItem_MainParameter(itemList.get(i));
+            item item=getItem_MainParameter(itemList.get(i));//解析商品为一个类
+            //获取商品地址
             String item_url="https:"+itemList.get(i).select("a[class=item-title-name]").get(0).attr("href");
-            //item=Item_Page_Crowl(item_url,item);
+            item=Item_Page_Crowl(item_url,item);
             item=Item_Detail_Page_Crowl(item_url,item);
+            item.setClassname(classname);
+            itemService.addItem(item);
             break;
         }
-
-        return;
     }
 
 
@@ -96,7 +124,11 @@ public class Computer_Crowl {
         item i=new item();
         //爬取商品名，商品详细信息地址，商品价格，商品简介
         i.setName(element.select("a[class=item-title-name]").get(0).html());
-        i.setPrice(element.select("div[class=price price-now] a").get(0).html());
+        if (element.select("div[class=price price-now] a").size()<=0)
+        {
+            i.setPrice("￥0");
+        }
+        else i.setPrice(element.select("div[class=price price-now] a").get(0).html());
         i.setProfile(element.select("span[class=item-title-des]").get(0).html());
         return i;
     }
@@ -115,9 +147,9 @@ public class Computer_Crowl {
             ImgUrlList.add(imgurl);
         }
         JSONArray jsonArray=new JSONArray(ImgUrlList);
-        item.setImgList(jsonArray.toString());
+        item.setImglist(jsonArray.toString());
 
-        item.setDiv(getDiv(ItemPage.select("div[id=JareaTop] div[class=product-detail-main]")));
+        item.setDivbox(getDiv(ItemPage.select("div[id=JareaTop] div[class=product-detail-main]")));
 
         item.setArticelList(getArticle(ItemPage.select("div[id=Jpingce]"),item.getName()));
 
@@ -135,11 +167,12 @@ public class Computer_Crowl {
             Article a=new Article();
             a.setTitle(li_list.get(i).select("dl dt").html());
             a.setData(li_list.get(i).select("span[class=time]").html().replace("<ins></ins>",""));
-            a.setPC(PCname);
+            a.setPc(PCname);
             a.setProfile(li_list.get(i).select("dl dd[class=u-summary]").html());
             a.setUrl("https:"+li_list.get(i).select("a[class=blk-img]").attr("href"));
             a.setImgurl("https:"+li_list.get(i).select("a[class=blk-img] img").attr("src"));
             a.setForm("太平洋:https://product.pconline.com.cn");
+            ArticleDao.add(a);
             ArticleList.add(a);
         }
         return ArticleList;

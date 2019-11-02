@@ -1,24 +1,48 @@
 package com.qfmy.inkman_computer.entity;
 
-import java.util.List;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.List;
+@TableName(value = "item")
 public class item {
+    @TableId(value = "id")
     private int id;
     private String name;//商品名
     private String price;//价格
-    private String imgList;//图片集合json
+    private String imglist;//图片集合json
     private String profile;//简介
     private String parameter;//属性集合 json
+    private String divbox;//展示div（性能指标/基本参数）
+    private String classname;//商品类型
+    @TableField(exist = false)
     private List<Article> ArticelList;//评测集合
-    private String div;//展示div（性能指标/基本参数）
 
-    public String getDiv() {
-        return div;
+    public String getClassname() {
+        return classname;
     }
 
-    public void setDiv(String div) {
-        this.div = div;
+    public void setClassname(String classname) {
+        this.classname = classname;
     }
+
+    public String getDivbox() {
+        return divbox;
+    }
+
+    public void setDivbox(String divbox) {
+        this.divbox = divbox;
+    }
+
+    public String getImglist() {
+        return imglist;
+    }
+
+    public void setImglist(String imglist) {
+        this.imglist = imglist;
+    }
+
 
     public void setArticelList(List<Article> articelList) {
         ArticelList = articelList;
@@ -40,9 +64,6 @@ public class item {
         this.price = price;
     }
 
-    public void setImgList(String imgList) {
-        this.imgList = imgList;
-    }
 
     public void setProfile(String profile) {
         this.profile = profile;
@@ -64,9 +85,6 @@ public class item {
         return price;
     }
 
-    public String getImgList() {
-        return imgList;
-    }
 
     public String getProfile() {
         return profile;
