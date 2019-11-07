@@ -4,7 +4,10 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qfmy.inkman_computer.dao.ArticleDao;
+import com.qfmy.inkman_computer.dao.SysMapDao;
 import com.qfmy.inkman_computer.entity.Article;
+import com.qfmy.inkman_computer.entity.SysMap;
+import com.qfmy.inkman_computer.service.ArticleService;
 import net.dongliu.requests.RawResponse;
 import net.dongliu.requests.Requests;
 import org.openqa.selenium.By;
@@ -15,6 +18,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.xml.soap.Node;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,10 +36,15 @@ public class Article_Crowl {
     Map<String,String> cookiesMap;//cookies
     Map<String, Object> headers;//报头
 
-    ArticleDao ArticleDao;
+    ArticleService articleService;
+    SysMapDao sysMapDao;
 
-    public void setArticleDao(ArticleDao ArticleDao) {
-        this.ArticleDao = ArticleDao;
+    public void setSysMapDao(SysMapDao sysMapDao) {
+        this.sysMapDao = sysMapDao;
+    }
+
+    public void setArticleService(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     public Article_Crowl() throws InterruptedException {
@@ -46,6 +55,8 @@ public class Article_Crowl {
 //        ChromeOptions ChromeOptions=new ChromeOptions();
 //        ChromeOptions.addArguments("-headless");//设置为不打开浏览器模式
         this.driver = new ChromeDriver(); // 新建一个WebDriver 的对象，但是new 的是谷歌的驱动
+
+        //加载cookies，获取token模拟登陆
         this.cookiesMap=readCookies(WL.getCookiesURL());
         addCookiesByMap(this.cookiesMap,driver);
         driver.get("https://mp.weixin.qq.com");
@@ -143,11 +154,12 @@ public class Article_Crowl {
 
         RawResponse appmsg_response = Requests.get(appmsg_url).cookies(cookiesMap).headers(headers).params(query_id_data).send();
         String ArticleBody = appmsg_response.readToText();
+        System.out.println(ArticleBody);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode BodyNode = objectMapper.readTree(ArticleBody);
 
         int ArticleCount=BodyNode.get("app_msg_cnt").asInt();
-        for (int i=0;i<=ArticleCount/5;i++)
+        for (int i=Integer.parseInt(sysMapDao.selectById("WeChatArticlePageCount").getValue());i<=ArticleCount/5;i++)
         {
             query_id_data.put("random", Math.random());//随机数
             query_id_data.put("begin", i*5);//从第几条开始
@@ -166,12 +178,16 @@ public class Article_Crowl {
                     a.setImgurl(BodyNode.get(j).get("cover").asText());
                     a.setUrl(BodyNode.get(j).get("link").asText());
                     a.setData(stampToDate(BodyNode.get(j).get("update_time").asText()));
-                    a.setHtml(DownHtml.DownHtml(a.getUrl()));
-                    a.setForm("WeChat");
-                    //ArticleDao.insert(a);
+                    a.setForm("微信:http://mp.weixin.qq.com");
+                    a=DownHtml.DownHtml(a.getUrl(),a);
+                    articleService.addArticle(a);
+                    SysMap sm=new SysMap();
+                    sm.setName("WeChatArticlePageCount");
+                    sm.setValue((i+1)+"");
+                    sysMapDao.updateById(sm);
                 }
             }
-            Thread.sleep(2000);
+            Thread.sleep(5000);
         }
         driver.close();
         driver.quit();

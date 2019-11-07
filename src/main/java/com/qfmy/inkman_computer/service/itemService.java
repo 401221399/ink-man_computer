@@ -29,4 +29,9 @@ public class itemService extends ServiceImpl<itemDao, item> {
             item_articleDao.insert(ia);
         }
     }
+
+    public item getItemBy(int id)
+    {
+        return  itemDao.selectById(id);
+    }
 }

@@ -87,6 +87,8 @@ public class ShiroConf {
         filterMap.put("/user/save", "anon");
         filterMap.put("/user/isHaveUser/*", "anon");
         filterMap.put("/sys/login", "anon");    //登陆 ajax请求
+        filterMap.put("/item/**", "anon");    //商品 ajax请求
+        filterMap.put("/Article/**", "anon");    //文章 ajax请求
 
 
         //springboot默认

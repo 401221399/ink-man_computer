@@ -1,7 +1,10 @@
 package com.qfmy.inkman_computer.Util.CrowlUtil;
 
+import com.qfmy.inkman_computer.entity.Article;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +34,28 @@ public class DownHtml {
         return page;
     }
 
-    public static String DownHtml(String URL)
+    public void Test(String url)
+    {
+        Document page=getDocument(url);
+        Elements elements=page.select("div[id=js_content]").get(0).children();
+        String name="";
+        String profile="";
+        for (Element e:elements)
+        {
+
+            if (e.tagName().equals("section")) break;
+            else if(!e.tagName().equals("p") || e.text().length()<=0) continue;
+            else
+            {
+                name=e.text();
+                profile=profile+e.text();
+            }
+        }
+        profile=profile.replace(name,"");
+        System.out.println(name+"===="+profile);
+    }
+
+    public static Article DownHtml(String URL,Article a)
     {
         Document page=getDocument(URL);
 
@@ -45,7 +69,27 @@ public class DownHtml {
         //微信的图片链接都是在data-src属性中,src属性的链接则是无效的链接，所以要把data-src的链接赋值给src
         html = html.replace("data-src", "src");
 
-        return html;
+        Elements elements=page.select("div[id=js_content]").get(0).children();
+        String name="";
+        String profile="";
+        for (Element e:elements)
+        {
+
+            if (e.tagName().equals("section")) break;
+            else if(!e.tagName().equals("p") || e.text().length()<=0) continue;
+            else
+            {
+                name=e.text();
+                profile=profile+e.text();
+            }
+        }
+        profile=profile.replace(name,"");
+
+        a.setHtml(html);
+        a.setProfile(profile);
+        a.setPc(name);
+
+        return a;
 //        FileWriter writer;
 //        try {
 //            writer = new FileWriter("D:\\工作站\\SpringBoot\\ink-man_computer\\this.html");
