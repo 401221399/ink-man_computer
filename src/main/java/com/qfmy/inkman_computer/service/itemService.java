@@ -1,5 +1,6 @@
 package com.qfmy.inkman_computer.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qfmy.inkman_computer.dao.*;
 import com.qfmy.inkman_computer.dao.itemDao;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class itemService extends ServiceImpl<itemDao, item> {
@@ -34,4 +39,20 @@ public class itemService extends ServiceImpl<itemDao, item> {
     {
         return  itemDao.selectById(id);
     }
+
+    public List<String> getMakeList(String classname)
+    {
+       return itemDao.getMakeList(classname);
+    }
+    public List<item> getItemList(String classname,String make,String min,String max,String page,String sort)
+    {
+
+        return itemDao.getItemList(classname,make,min,max,(Integer.parseInt(page)-1)*25,sort);
+    }
+    public int getItemListCount(String classname,String make,String min,String max)
+    {
+
+        return itemDao.getItemListCount(classname,make,min,max);
+    }
+
 }

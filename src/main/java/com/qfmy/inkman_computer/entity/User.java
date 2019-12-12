@@ -15,6 +15,8 @@ public class User {
     private String username;
     @TableField("password")
     private String password;
+    @TableField("name")
+    private String name;
     @TableField("salt")
     private String salt;
     @TableField("status")//0启用，1停用
@@ -23,6 +25,24 @@ public class User {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @TableField("createdate")
     private Date createdate;
+    @TableField("firstinfo")
+    private int firstinfo;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFirstinfo(int firstinfo) {
+        this.firstinfo = firstinfo;
+    }
+
+    public int getFirstinfo() {
+        return firstinfo;
+    }
 
     public void setStatus(int status) {
         this.status = status;

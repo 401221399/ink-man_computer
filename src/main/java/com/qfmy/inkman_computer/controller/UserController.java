@@ -21,6 +21,21 @@ public class UserController {
 
 
     @ResponseBody
+    @RequestMapping(value = "/authentication",method = RequestMethod.GET)
+    @CrossOrigin
+    public Map authentication(){
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        if (principal instanceof User) {
+            User user = (User) principal;
+            Map<String,String> map=new HashMap<>();
+            map.put("username",user.getUsername());
+            map.put("name",user.getName());
+            return map;
+        }
+        return null;
+    }
+    @CrossOrigin
+    @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public R login(@RequestBody User user) {
         // 这里自己抛出自定义的异常信息
@@ -48,6 +63,8 @@ public class UserController {
      * 退出 SecurityUtils.getSubject().logout();
      *  <a href="/logout">退出</a>
      */
+    @CrossOrigin
+    @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public R logout() {
         SecurityUtils.getSubject().logout();  //当前用户退出

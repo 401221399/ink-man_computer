@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8089
 
 spring:
   datasource:
@@ -37,4 +37,4 @@ logging:
   path: logs
   file: admin.log
   level:
-    com.qfmy.inkman_computer.dao: INFO
+    com.qfmy.inkman_computer.dao: DEBUG

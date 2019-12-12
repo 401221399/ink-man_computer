@@ -12,7 +12,8 @@ public class AjaxConf implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowCredentials(true)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("*")
+                .allowedHeaders("*")
                 .maxAge(3600);
     }
 }

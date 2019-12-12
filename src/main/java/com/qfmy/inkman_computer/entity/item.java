@@ -16,8 +16,17 @@ public class item {
     private String parameter;//属性集合 json
     private String divbox;//展示div（性能指标/基本参数）
     private String classname;//商品类型
+    private String make;//品牌
     @TableField(exist = false)
     private List<Article> ArticelList;//评测集合
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
 
     public String getClassname() {
         return classname;

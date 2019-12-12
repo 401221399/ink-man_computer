@@ -16,4 +16,35 @@
         SELECT a.* from article as a LEFT JOIN item_article as ia on a.id=ia.article_id
         LEFT JOIN item as i on ia.item_id=i.id where i.id=#{itemid}
     </select>
+
+    <select id="getArticleList" resultType="com.qfmy.inkman_computer.entity.Article">
+        select * from article
+        <where>
+            <if test="classname != 'null'">
+                and  classname = #{classname}
+            </if>
+            <if test="form != 'null'">
+                and  form = #{form}
+            </if>
+        </where>
+        <if test="sort == 'data_asc'">
+            order by data asc
+        </if>
+        <if test="sort == 'data_desc'">
+            order by data desc
+        </if>
+        limit #{page},10
+    </select>
+
+    <select id="getArticleListCount" resultType="int">
+        select count(*) from article
+        <where>
+            <if test="classname != 'null'">
+                and  classname = #{classname}
+            </if>
+            <if test="form != 'null'">
+                and  form = #{form}
+            </if>
+        </where>
+    </select>
 </mapper>

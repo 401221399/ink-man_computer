@@ -9,6 +9,7 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ public class ShiroConf {
     public DefaultWebSessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionValidationSchedulerEnabled(true);
+        // 去掉shiro登录时url里的JSESSIONID
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         sessionManager.setSessionValidationInterval(3600000L);
 
@@ -89,8 +91,8 @@ public class ShiroConf {
         filterMap.put("/sys/login", "anon");    //登陆 ajax请求
         filterMap.put("/item/**", "anon");    //商品 ajax请求
         filterMap.put("/Article/**", "anon");    //文章 ajax请求
-
-
+        filterMap.put("/article/**", "anon");    //文章 ajax请求
+        filterMap.put("/item_options/save_Shopcar_Collection/**", "anon");
         //springboot默认
         filterMap.put("/favicon.ico", "anon");
         filterMap.put("/captcha.jpg", "anon");

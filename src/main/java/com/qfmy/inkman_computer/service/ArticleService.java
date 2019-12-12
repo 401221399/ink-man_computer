@@ -47,4 +47,15 @@ public class ArticleService extends ServiceImpl<ArticleDao, Article> {
     {
         return articleDao.getArticleByItemId(itemid);
     }
+
+    public List<Article> getArticleList(String classname,String form,String page,String sort)
+    {
+
+        return articleDao.getArticleList(classname,form,(Integer.parseInt(page)-1)*10,sort);
+    }
+    public int getArticleListCount(String classname,String form)
+    {
+
+        return articleDao.getArticleListCount(classname,form);
+    }
 }

@@ -8,7 +8,60 @@
  -->
 <mapper namespace="com.qfmy.inkman_computer.dao.itemDao">
     <insert id="add" parameterType="com.qfmy.inkman_computer.entity.item" useGeneratedKeys="true" keyProperty="id" >
-       INSERT INTO item (classname, price, parameter, profile, name, divbox, imglist )
-       VALUES ( #{classname},#{price}, #{parameter},#{profile}, #{name}, #{divbox}, #{imglist} )
+       INSERT INTO item (classname, price, parameter, profile, name, divbox, imglist, make)
+       VALUES ( #{classname},#{price}, #{parameter},#{profile}, #{name}, #{divbox}, #{imglist}, #{make} )
     </insert>
+
+    <select id="getMakeList" parameterType="String" resultType="String">
+        select make from item  where classname=#{classname} group by make
+    </select>
+
+    <select id="getItemList" resultType="com.qfmy.inkman_computer.entity.item">
+        select * from item
+        <where>
+            <if test="classname != 'null'">
+               and  classname = #{classname}
+            </if>
+            <if test="make != 'null'">
+                and  make = #{make}
+            </if>
+            <if test="min != 'null' and max != 'null' ">
+                and  price between #{min} and #{max}
+            </if>
+            <if test="min == 'null' and max != 'null'">
+                and price <![CDATA[ <= ]]> #{max}
+            </if>
+            <if test="min != 'null' and max == 'null'">
+                and price >= #{min}
+            </if>
+        </where>
+        <if test="sort == 'price_asc'">
+            order by price asc
+        </if>
+        <if test="sort == 'price_desc'">
+            order by price desc
+        </if>
+        limit #{page},25
+    </select>
+
+    <select id="getItemListCount" resultType="int">
+        select count(*) from item
+        <where>
+            <if test="classname != 'null'">
+                and  classname = #{classname}
+            </if>
+            <if test="make != 'null'">
+                and  make = #{make}
+            </if>
+            <if test="min != 'null' and max != 'null' ">
+                and  price between #{min} and #{max}
+            </if>
+            <if test="min == 'null' and max != 'null'">
+                and price <![CDATA[ <= ]]> #{max}
+            </if>
+            <if test="min != 'null' and max == 'null'">
+                and price >= #{min}
+            </if>
+        </where>
+    </select>
 </mapper>
