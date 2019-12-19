@@ -67,4 +67,23 @@ public class UserService extends ServiceImpl<UserDao, User> {
             return true;
         }
     }
+
+    public User getUserByOpenid(String openid){
+        QueryWrapper qw=new QueryWrapper<>();
+        qw.eq("openid",openid);
+        return this.baseMapper.selectOne(qw);
+    }
+    public int addopenid(String username,String password,String openid){
+        QueryWrapper qw=new QueryWrapper<>();
+        qw.eq("username",username);
+        User u =  this.baseMapper.selectOne(qw);
+        password = ShiroUtils.sha256(password, u.getSalt());
+        if(password.equals(u.getPassword()))
+        {
+            u.setOpenid(openid);
+            return this.baseMapper.updateById(u);
+        }
+        else
+            return 0;
+    }
 }

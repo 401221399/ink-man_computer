@@ -92,6 +92,7 @@ public class ShiroConf {
         filterMap.put("/item/**", "anon");    //商品 ajax请求
         filterMap.put("/Article/**", "anon");    //文章 ajax请求
         filterMap.put("/article/**", "anon");    //文章 ajax请求
+        filterMap.put("/wx/**", "anon");    //微信小程序ajax请求
         filterMap.put("/item_options/save_Shopcar_Collection/**", "anon");
         //springboot默认
         filterMap.put("/favicon.ico", "anon");

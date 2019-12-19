@@ -21,12 +21,22 @@ public class User {
     private String salt;
     @TableField("status")//0启用，1停用
     private int status;
+    @TableField("openid")//微信绑定id
+    private String openid;
     // 时间类型 @JsonFormat
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @TableField("createdate")
     private Date createdate;
     @TableField("firstinfo")
     private int firstinfo;
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
 
     public String getName() {
         return name;

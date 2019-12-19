@@ -1,12 +1,17 @@
 package com.qfmy.inkman_computer;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qfmy.inkman_computer.Util.CrowlUtil.*;
 import com.qfmy.inkman_computer.dao.ArticleDao;
 import com.qfmy.inkman_computer.entity.Article;
 import com.qfmy.inkman_computer.entity.item;
 import com.qfmy.inkman_computer.service.ArticleService;
+import com.qfmy.inkman_computer.service.UserService;
 import com.qfmy.inkman_computer.service.itemService;
+import net.dongliu.requests.RawResponse;
+import net.dongliu.requests.Requests;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
@@ -27,6 +32,8 @@ public class InkManComputerApplicationTests{
     itemService itemService;
     @Resource
     ArticleDao ArticleDao;
+    @Resource
+    UserService UserService;
 
     @Test
     public void Test() throws Exception {
